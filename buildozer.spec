@@ -25,7 +25,7 @@ requirements = kivy==2.0.0, kivymd==0.104.2, pillow, MetaTrader5
 orientation = portrait
 
 # Specify AIDL files to include
-android.add_aidl = src/project-bot/aidl/foo/bar/IFoo.aidl
+android.add_aidl = src/main/aidl/foo/bar/IFoo.aidl
 
 # Indicate if the application should be fullscreen or not
 fullscreen = 0
