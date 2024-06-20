@@ -40,7 +40,7 @@ jobs:
           rmdir $ANDROID_HOME/cmdline-tools/latest/cmdline-tools
         shell: bash
 
-      - name: Accept Android licenses
+      - name: Accept Android SDK licenses
         run: |
           mkdir -p $ANDROID_HOME/licenses
           echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > $ANDROID_HOME/licenses/android-sdk-license
@@ -48,18 +48,19 @@ jobs:
           echo -e "\n7d3c1e1a99a77b662f1254ddbeed3901e976f5a7" > $ANDROID_HOME/licenses/intel-android-sysimage-license
         shell: bash
 
+      - name: Install AIDL compiler
+        run: |
+          sudo apt update
+          sudo apt install -y aidl
+        shell: bash
+
       - name: Update SDK and install packages
         run: |
           set -e
           $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --update || { echo 'SDK update failed'; exit 1; }
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "build-tools;30.0.2" "platforms;android-30" || { echo 'SDK package installation failed'; exit 1; }
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "build-tools;35.0.0" "platforms;android-30" || { echo 'SDK package installation failed'; exit 1; }
           $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "extras;android;m2repository" "extras;google;m2repository" || { echo 'Extras installation failed'; exit 1; }
           $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platform-tools" "emulator" "system-images;android-30;google_apis;x86_64" || { echo 'Platform tools/emulator installation failed'; exit 1; }
-        shell: bash
-
-      - name: Install AIDL compiler
-        run: |
-          sudo apt install -y aidl
         shell: bash
 
       - name: Get Date
