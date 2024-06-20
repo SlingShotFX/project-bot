@@ -1,8 +1,8 @@
-name: CI
+name: Build Android App
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build:
@@ -11,6 +11,7 @@ jobs:
     env:
       ANDROID_HOME: ${{ github.workspace }}/android-sdk
       JAVA_HOME: /usr/lib/jvm/java-8-openjdk-amd64
+      PATH: ${{ github.workspace }}/android-sdk/cmdline-tools/latest/bin:$PATH
 
     steps:
       - name: Checkout Repository
@@ -28,6 +29,7 @@ jobs:
             libfreetype6-dev liblcms2-dev libwebp-dev libffi-dev \
             openjdk-8-jdk unzip zip wget
           pip install --upgrade cython buildozer
+          sudo apt install -y aidl
         shell: bash
 
       - name: Install Android SDK tools
@@ -40,25 +42,20 @@ jobs:
           rmdir $ANDROID_HOME/cmdline-tools/latest/cmdline-tools
         shell: bash
 
-      - name: Accept Android licenses
+      - name: Accept Android SDK licenses
         run: |
-          mkdir -p $ANDROID_HOME/licenses
-          echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > $ANDROID_HOME/licenses/android-sdk-license
-          echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > $ANDROID_HOME/licenses/android-sdk-preview-license
-          echo -e "\n7d3c1e1a99a77b662f1254ddbeed3901e976f5a7" > $ANDROID_HOME/licenses/intel-android-sysimage-license
-          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
+          mkdir -p $ANDROID_HOME/licenses || true
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses >/dev/null || true
+          echo "Android SDK licenses accepted successfully."
         shell: bash
 
-      - name: Update SDK and install build-tools
+      - name: Update SDK and install packages
         run: |
           set -e
           $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --update || { echo 'SDK update failed'; exit 1; }
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "build-tools;30.0.2" || { echo 'Build tools installation failed'; exit 1; }
-        shell: bash
-
-      - name: Install AIDL compiler
-        run: |
-          sudo apt install -y aidl
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "build-tools;30.0.3" "platforms;android-30" || { echo 'SDK package installation failed'; exit 1; }
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "extras;android;m2repository" "extras;google;m2repository" || { echo 'Extras installation failed'; exit 1; }
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platform-tools" "emulator" "system-images;android-30;google_apis;x86_64" || { echo 'Platform tools/emulator installation failed'; exit 1; }
         shell: bash
 
       - name: Get Date
