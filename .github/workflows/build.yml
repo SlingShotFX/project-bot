@@ -49,13 +49,11 @@ jobs:
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
         shell: bash
 
-      - name: Update SDK and install packages
+      - name: Update SDK and install build-tools
         run: |
           set -e
           $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --update || { echo 'SDK update failed'; exit 1; }
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "build-tools;30.0.2" "platforms;android-30" || { echo 'SDK package installation failed'; exit 1; }
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "extras;android;m2repository" "extras;google;m2repository" || { echo 'Extras installation failed'; exit 1; }
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platform-tools" "emulator" "system-images;android-30;google_apis;x86_64" || { echo 'Platform tools/emulator installation failed'; exit 1; }
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "build-tools;30.0.2" || { echo 'Build tools installation failed'; exit 1; }
         shell: bash
 
       - name: Install AIDL compiler
