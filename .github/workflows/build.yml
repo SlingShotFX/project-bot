@@ -23,8 +23,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo apt update
-          sudo apt install -y \
+          sudo apt update && sudo apt install -y \
             build-essential ccache git libncurses5 libncurses5-dev libtiff5-dev libjpeg8-dev zlib1g-dev \
             libfreetype6-dev liblcms2-dev libwebp-dev libffi-dev \
             openjdk-8-jdk unzip zip wget
@@ -33,6 +32,7 @@ jobs:
 
       - name: Install Android SDK tools
         run: |
+          set -e
           mkdir -p $ANDROID_HOME/cmdline-tools/latest
           wget -q "https://dl.google.com/android/repository/commandlinetools-linux-7583922_latest.zip" -O android-sdk-tools.zip
           unzip -qq android-sdk-tools.zip -d $ANDROID_HOME/cmdline-tools/latest
@@ -47,7 +47,7 @@ jobs:
 
       - name: Update SDK and install packages
         run: |
-          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
+          set -e
           $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --update
           $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "build-tools;30.0.2" "platforms;android-30"
           $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "extras;android;m2repository" "extras;google;m2repository"
