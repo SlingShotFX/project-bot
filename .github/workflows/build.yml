@@ -7,6 +7,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      ANDROID_SDK_ROOT: $RUNNER_WORKSPACE/android-sdk
+      JAVA_HOME: /usr/lib/jvm/java-8-openjdk-amd64
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -16,16 +20,27 @@ jobs:
         with:
           python-version: '3.8'
 
-      - name: Update Package Repositories
-        run: sudo apt update
-
-      - name: Install Dependencies
+      - name: Install dependencies
         run: |
+          sudo apt update
           sudo apt install -y \
             build-essential ccache git libncurses5 libncurses5-dev libtiff5-dev libjpeg8-dev zlib1g-dev \
             libfreetype6-dev liblcms2-dev libwebp-dev libffi-dev \
-            openjdk-8-jdk unzip zip
+            openjdk-8-jdk unzip zip wget
           pip install --upgrade cython buildozer
+        shell: bash
+
+      - name: Install Android SDK tools
+        run: |
+          mkdir -p $ANDROID_SDK_ROOT
+          wget -q "https://dl.google.com/android/repository/commandlinetools-linux-7583922_latest.zip" -O android-sdk-tools.zip
+          unzip -qq android-sdk-tools.zip -d $ANDROID_SDK_ROOT
+          yes | $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --licenses
+          $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --update
+          $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager "build-tools;30.0.2" "platforms;android-30"
+          $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager "extras;android;m2repository" "extras;google;m2repository"
+          $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager "platform-tools" "emulator" "system-images;android-30;google_apis;x86_64"
+          $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --install 'platforms;android-30'
         shell: bash
 
       - name: Get Date
