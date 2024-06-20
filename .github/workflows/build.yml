@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      ANDROID_SDK_ROOT: $RUNNER_WORKSPACE/android-sdk
+      ANDROID_HOME: ${{ runner.workspace }}/android-sdk
       JAVA_HOME: /usr/lib/jvm/java-8-openjdk-amd64
 
     steps:
@@ -32,15 +32,15 @@ jobs:
 
       - name: Install Android SDK tools
         run: |
-          mkdir -p $ANDROID_SDK_ROOT
+          mkdir -p $ANDROID_HOME
           wget -q "https://dl.google.com/android/repository/commandlinetools-linux-7583922_latest.zip" -O android-sdk-tools.zip
-          unzip -qq android-sdk-tools.zip -d $ANDROID_SDK_ROOT
-          yes | $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --licenses
-          $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --update
-          $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager "build-tools;30.0.2" "platforms;android-30"
-          $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager "extras;android;m2repository" "extras;google;m2repository"
-          $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager "platform-tools" "emulator" "system-images;android-30;google_apis;x86_64"
-          $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --install 'platforms;android-30'
+          unzip -qq android-sdk-tools.zip -d $ANDROID_HOME
+          yes | $ANDROID_HOME/cmdline-tools/bin/sdkmanager --licenses
+          $ANDROID_HOME/cmdline-tools/bin/sdkmanager --update
+          $ANDROID_HOME/cmdline-tools/bin/sdkmanager "build-tools;30.0.2" "platforms;android-30"
+          $ANDROID_HOME/cmdline-tools/bin/sdkmanager "extras;android;m2repository" "extras;google;m2repository"
+          $ANDROID_HOME/cmdline-tools/bin/sdkmanager "platform-tools" "emulator" "system-images;android-30;google_apis;x86_64"
+          $ANDROID_HOME/cmdline-tools/bin/sdkmanager --install 'platforms;android-30'
         shell: bash
 
       - name: Get Date
