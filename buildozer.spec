@@ -19,16 +19,13 @@ source.include_exts = py,png,jpg,kv,atlas
 version = 0.1
 
 # Application requirements
-requirements = kivy, kivymd==0.104.2, MetaTrader5
+requirements = kivy==2.0.0, kivymd==0.104.2, pillow, MetaTrader5
 
 # Supported orientations
 orientation = portrait
 
-# Specify output directory for generated Java source files (if needed)
-# android.add_src = path/to/generated/java/source
-
-# Specify header directory for C++ headers (if needed)
-# android.add_cpp = path/to/generated/cpp/headers
+# Specify AIDL files to include
+android.add_aidl = src/project-bot/aidl/foo/bar/IFoo.aidl
 
 # Indicate if the application should be fullscreen or not
 fullscreen = 0
@@ -49,3 +46,4 @@ log_level = 2
 
 # Display warning if buildozer is run as root (0 = False, 1 = True)
 warn_on_root = 1
+
