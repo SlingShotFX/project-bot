@@ -10,11 +10,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      # http://man7.org/linux/man-pages/man1/date.1.html
       - name: Get Date
         id: get-date
-        run: echo "::set-output name=date::$(/bin/date -u '+%Y%m%d')"
-        shell: bash
+        run: echo "date=$(date -u '+%Y%m%d')" >> $GITHUB_ENV
 
       - name: Cache Buildozer global directory
         uses: actions/cache@v2
@@ -25,13 +23,13 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: .buildozer
-          key: ${{ runner.os }}-${{ steps.get-date.outputs.date }}-${{ hashFiles('buildozer.spec') }}
+          key: ${{ runner.os }}-${{ env.date }}-${{ hashFiles('buildozer.spec') }}
 
       - name: Build with Buildozer
-        uses: ArtemSBulgakov/buildozer/action@v1
+        uses: ArtemSBulgakov/buildozer@v1
         id: buildozer
         with:
-          command: buildozer android debug
+          command: android debug
           buildozer_version: master
 
       - name: Upload artifacts
@@ -39,4 +37,3 @@ jobs:
         with:
           name: package
           path: ${{ steps.buildozer.outputs.filename }}
-
