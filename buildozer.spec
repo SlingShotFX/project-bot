@@ -1,88 +1,63 @@
 [app]
 
-# (str) Title of your application
+# Title of your application
 title = SlingShotFX
 
-# (str) Package name
+# Package name
 package.name = slingshotfx
 
-# (str) Package domain (needed for android/ios packaging)
+# Package domain (needed for android/ios packaging)
 package.domain = org.example
 
-# (str) Source code where the main.py lives
+# Source code where the main.py lives
 source.dir = py,png,jpg,kv,atlas
 
-# (list) Source files to include (let empty to include all the files)
+# Source files to include (let empty to include all the files)
 source.include_exts = py,png,jpg,kv,atlas
 
-# (str) Application version
+# Application version
 version = 0.1
 
-# (list) Application requirements
+# Application requirements
 requirements = kivy==2.0.0, kivymd==0.104.2, pillow, MetaTrader5
 
-# (str) Supported orientations
+# Supported orientations
 orientation = portrait
 
-# (str) Custom source folders for requirements
-# Sets custom source for any requirements with recipes
-# requirements.source.kivy = ../../kivy
-
+# Specify AIDL files to include
 android.add_aidl = src/main/aidl/foo/bar/IFoo.aidl
 
-# Specify AIDL files
-android.add_aidl = path/to/your/aidl/files
+# Specify output directory for generated Java source files (if needed)
+# android.add_src = path/to/generated/java/source
 
-# Specify output directory if needed
-android.add_src = path/to/generated/java/source
+# Specify header directory for C++ headers (if needed)
+# android.add_cpp = path/to/generated/cpp/headers
 
-# Specify header directory for C++ headers if needed
-android.add_cpp = path/to/generated/cpp/headers
+# List of services to declare (if any)
+# services = NAME:ENTRYPOINT_TO_PY,NAME2:ENTRYPOINT2_TO_PY
 
-# (list) List of service to declare
-#services = NAME:ENTRYPOINT_TO_PY,NAME2:ENTRYPOINT2_TO_PY
-
-
-#
-# Android specific
-#
-
-# (bool) Indicate if the application should be fullscreen or not
+# Android specific settings
+# Indicate if the application should be fullscreen or not
 fullscreen = 0
 
-# (list) Permissions
+# Permissions
 android.permissions = INTERNET
 
-# (list) Android architecture to build for
+# Android architectures to build for
 android.archs = arm64-v8a, armeabi-v7a
 
-# (bool) Allow backup for Android
+# Allow backup for Android
 android.allow_backup = True
 
-
-#
-# iOS specific
-#
-
-# Path to a custom kivy-ios folder
-#ios.kivy_ios_dir = ../kivy-ios
-# Alternatively, specify the URL and branch of a git checkout:
-ios.kivy_ios_url = https://github.com/kivy/kivy-ios
-ios.kivy_ios_branch = master
-
-# URL pointing to an icon (57x57px) to be displayed during download
-# This option should be defined along with `app_url` and `full_size_image_url` options.
-#ios.manifest.display_image_url =
-
-# URL pointing to a large icon (512x512px) to be used by iTunes
-# This option should be defined along with `app_url` and `display_image_url` options.
-#ios.manifest.full_size_image_url =
+# iOS specific settings (commented out for Android-only configuration)
+# ios.kivy_ios_url = https://github.com/kivy/kivy-ios
+# ios.kivy_ios_branch = master
 
 
 [buildozer]
 
-# (int) Log level (0 = error only, 1 = info, 2 = debug (with command output))
+# Log level (0 = error only, 1 = info, 2 = debug (with command output))
 log_level = 2
 
-# (int) Display warning if buildozer is run as root (0 = False, 1 = True)
+# Display warning if buildozer is run as root (0 = False, 1 = True)
 warn_on_root = 1
