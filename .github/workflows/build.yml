@@ -8,7 +8,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -18,7 +19,8 @@ jobs:
       - name: Install Dependencies
         run: |
           set -e
-          sudo apt update && sudo apt install -y \
+          sudo apt update
+          sudo apt install -y \
             build-essential ccache git libncurses5 libncurses5-dev libtiff5-dev libjpeg8-dev zlib1g-dev \
             libfreetype6-dev liblcms2-dev libwebp-dev libffi-dev libgstreamer1.0 libgstreamer-plugins-base1.0 libgstreamer-plugins-good1.0 \
             gstreamer1.0-plugins-{bad,base,good,ugly} gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-libav \
@@ -47,6 +49,11 @@ jobs:
         run: |
           set -e
           buildozer android debug
+        shell: bash
+
+      - name: List APK files
+        run: |
+          ls -l .buildozer/android/platform/build/dists/*/bin/*.apk
         shell: bash
 
       - name: Upload artifacts
