@@ -57,6 +57,11 @@ jobs:
           $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platform-tools" "emulator" "system-images;android-30;google_apis;x86_64" || { echo 'Platform tools/emulator installation failed'; exit 1; }
         shell: bash
 
+      - name: Install AIDL compiler
+        run: |
+          sudo apt install -y aidl
+        shell: bash
+
       - name: Get Date
         id: get-date
         run: echo "date=$(date -u '+%Y%m%d')" >> $GITHUB_ENV
