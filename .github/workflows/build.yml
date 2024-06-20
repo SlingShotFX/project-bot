@@ -40,7 +40,7 @@ jobs:
           rmdir $ANDROID_HOME/cmdline-tools/latest/cmdline-tools
         shell: bash
 
-      - name: Accept licenses
+      - name: Accept Android licenses
         run: |
           set -e
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || { echo 'License acceptance failed'; exit 1; }
