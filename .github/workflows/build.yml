@@ -46,6 +46,7 @@ jobs:
           echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > $ANDROID_HOME/licenses/android-sdk-license
           echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > $ANDROID_HOME/licenses/android-sdk-preview-license
           echo -e "\n7d3c1e1a99a77b662f1254ddbeed3901e976f5a7" > $ANDROID_HOME/licenses/intel-android-sysimage-license
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
         shell: bash
 
       - name: Update SDK and install packages
@@ -55,8 +56,6 @@ jobs:
           $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "build-tools;30.0.2" "platforms;android-30" || { echo 'SDK package installation failed'; exit 1; }
           $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "extras;android;m2repository" "extras;google;m2repository" || { echo 'Extras installation failed'; exit 1; }
           $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platform-tools" "emulator" "system-images;android-30;google_apis;x86_64" || { echo 'Platform tools/emulator installation failed'; exit 1; }
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "extras;android;gapid;3" || { echo 'GAPID installation failed'; exit 1; }
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "extras;android;gapid;3.1" || { echo 'GAPID installation failed'; exit 1; }
         shell: bash
 
       - name: Install AIDL compiler
