@@ -42,16 +42,17 @@ jobs:
 
       - name: Accept licenses
         run: |
-          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
+          set -e
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || { echo 'License acceptance failed'; exit 1; }
         shell: bash
 
       - name: Update SDK and install packages
         run: |
           set -e
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --update
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "build-tools;30.0.2" "platforms;android-30"
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "extras;android;m2repository" "extras;google;m2repository"
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platform-tools" "emulator" "system-images;android-30;google_apis;x86_64"
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --update || { echo 'SDK update failed'; exit 1; }
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "build-tools;30.0.2" "platforms;android-30" || { echo 'SDK package installation failed'; exit 1; }
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "extras;android;m2repository" "extras;google;m2repository" || { echo 'Extras installation failed'; exit 1; }
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platform-tools" "emulator" "system-images;android-30;google_apis;x86_64" || { echo 'Platform tools/emulator installation failed'; exit 1; }
         shell: bash
 
       - name: Get Date
@@ -73,12 +74,12 @@ jobs:
       - name: Build with Buildozer
         run: |
           set -e
-          buildozer android debug
+          buildozer android debug || { echo 'Buildozer build failed'; exit 1; }
         shell: bash
 
       - name: List APK files
         run: |
-          ls -l .buildozer/android/platform/build/dists/*/bin/*.apk
+          ls -l .buildozer/android/platform/build/dists/*/bin/*.apk || { echo 'Listing APK files failed'; exit 1; }
         shell: bash
 
       - name: Upload artifacts
