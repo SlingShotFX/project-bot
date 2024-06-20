@@ -37,7 +37,7 @@ version = 0.1
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = kivy==2.0.0, kivymd==0.104.2, MetaTrader5
+requirements = kivy==2.0.0, kivymd==0.104.2, pillow, MetaTrader5
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
