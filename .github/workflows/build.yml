@@ -1,8 +1,8 @@
-name: Build Android App
+name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
   build:
