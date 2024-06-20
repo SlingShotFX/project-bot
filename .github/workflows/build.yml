@@ -40,13 +40,17 @@ jobs:
           rmdir $ANDROID_HOME/cmdline-tools/latest/cmdline-tools
         shell: bash
 
-      - name: Accept licenses and install SDK packages
+      - name: Accept licenses
         run: |
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
+        shell: bash
+
+      - name: Update SDK and install packages
+        run: |
           $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --update
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "build-tools;30.0.2" "platforms;android-30"
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "extras;android;m2repository" "extras;google;m2repository"
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "platform-tools" "emulator" "system-images;android-30;google_apis;x86_64"
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "build-tools;30.0.2" "platforms;android-30"
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "extras;android;m2repository" "extras;google;m2repository"
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platform-tools" "emulator" "system-images;android-30;google_apis;x86_64"
         shell: bash
 
       - name: Get Date
