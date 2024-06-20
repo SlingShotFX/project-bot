@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      ANDROID_HOME: ${{ github.workspace }}/android-sdk
+      ANDROID_SDK_ROOT: ${{ github.workspace }}/android-sdk
       JAVA_HOME: /usr/lib/jvm/java-8-openjdk-amd64
 
     steps:
@@ -32,35 +32,21 @@ jobs:
 
       - name: Install Android SDK tools
         run: |
-          set -e
-          mkdir -p $ANDROID_HOME/cmdline-tools/latest
-          wget -q "https://dl.google.com/android/repository/commandlinetools-linux-7583922_latest.zip" -O android-sdk-tools.zip
-          unzip -qq android-sdk-tools.zip -d $ANDROID_HOME/cmdline-tools/latest
-          mv $ANDROID_HOME/cmdline-tools/latest/cmdline-tools/* $ANDROID_HOME/cmdline-tools/latest/
-          rmdir $ANDROID_HOME/cmdline-tools/latest/cmdline-tools
-        shell: bash
-
-      - name: Accept Android SDK licenses
-        run: |
-          mkdir -p $ANDROID_HOME/licenses
-          echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > $ANDROID_HOME/licenses/android-sdk-license
-          echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > $ANDROID_HOME/licenses/android-sdk-preview-license
-          echo -e "\n7d3c1e1a99a77b662f1254ddbeed3901e976f5a7" > $ANDROID_HOME/licenses/intel-android-sysimage-license
+          mkdir -p $ANDROID_SDK_ROOT
+          wget -q "https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip" -O android-sdk-tools.zip
+          unzip -qq android-sdk-tools.zip -d $ANDROID_SDK_ROOT
+          yes | $ANDROID_SDK_ROOT/tools/bin/sdkmanager --licenses
+          $ANDROID_SDK_ROOT/tools/bin/sdkmanager --update
+          $ANDROID_SDK_ROOT/tools/bin/sdkmanager "build-tools;30.0.2" "platforms;android-30"
+          $ANDROID_SDK_ROOT/tools/bin/sdkmanager "extras;android;m2repository" "extras;google;m2repository"
+          $ANDROID_SDK_ROOT/tools/bin/sdkmanager "platform-tools" "emulator" "system-images;android-30;google_apis;x86_64"
+          $ANDROID_SDK_ROOT/tools/bin/sdkmanager --install 'platforms;android-30'
         shell: bash
 
       - name: Install AIDL compiler
         run: |
           sudo apt update
           sudo apt install -y aidl
-        shell: bash
-
-      - name: Update SDK and install packages
-        run: |
-          set -e
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --update || { echo 'SDK update failed'; exit 1; }
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "build-tools;35.0.0" "platforms;android-30" || { echo 'SDK package installation failed'; exit 1; }
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "extras;android;m2repository" "extras;google;m2repository" || { echo 'Extras installation failed'; exit 1; }
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platform-tools" "emulator" "system-images;android-30;google_apis;x86_64" || { echo 'Platform tools/emulator installation failed'; exit 1; }
         shell: bash
 
       - name: Get Date
