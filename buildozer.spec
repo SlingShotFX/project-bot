@@ -30,6 +30,15 @@ orientation = portrait
 
 android.add_aidl = src/main/aidl/foo/bar/IFoo.aidl
 
+# Specify AIDL files
+android.add_aidl = path/to/your/aidl/files
+
+# Specify output directory if needed
+android.add_src = path/to/generated/java/source
+
+# Specify header directory for C++ headers if needed
+android.add_cpp = path/to/generated/cpp/headers
+
 # (list) List of service to declare
 #services = NAME:ENTRYPOINT_TO_PY,NAME2:ENTRYPOINT2_TO_PY
 
