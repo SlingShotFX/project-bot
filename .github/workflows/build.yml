@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      ANDROID_HOME: ${{ runner.workspace }}/android-sdk
+      ANDROID_HOME: ${{ github.workspace }}/android-sdk
       JAVA_HOME: /usr/lib/jvm/java-8-openjdk-amd64
 
     steps:
