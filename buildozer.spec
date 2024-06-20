@@ -40,7 +40,7 @@ orientation = portrait
 fullscreen = 0
 
 # (list) Permissions
-android.permissions = INTERNET
+android.permissions = android.permission.INTERNET, (name=android.permission.WRITE_EXTERNAL_STORAGE;maxSdkVersion=18)
 
 # (list) Android architecture to build for
 android.archs = arm64-v8a, armeabi-v7a
