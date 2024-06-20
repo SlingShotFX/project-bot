@@ -46,16 +46,15 @@ jobs:
           echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > $ANDROID_HOME/licenses/android-sdk-license
           echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > $ANDROID_HOME/licenses/android-sdk-preview-license
           echo -e "\n7d3c1e1a99a77b662f1254ddbeed3901e976f5a7" > $ANDROID_HOME/licenses/intel-android-sysimage-license
-          echo -e "\n601085b94cd77f0b54ff86406957099ebe79c4b6" > $ANDROID_HOME/licenses/android-sdk-arm-dbt-license
-          echo -e "\n33b6a2b64607f11b759f320ef9dff4ae5c47d97a" > $ANDROID_HOME/licenses/android-sdk-preview-license
         shell: bash
 
       - name: Update SDK and install packages
         run: |
           set -e
-          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --update
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "build-tools;30.0.2" "platforms;android-30" "extras;android;m2repository" "extras;google;m2repository" "platform-tools" "emulator" "system-images;android-30;google_apis;x86_64"
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --update || { echo 'SDK update failed'; exit 1; }
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "build-tools;30.0.2" "platforms;android-30" || { echo 'SDK package installation failed'; exit 1; }
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "extras;android;m2repository" "extras;google;m2repository" || { echo 'Extras installation failed'; exit 1; }
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platform-tools" "emulator" "system-images;android-30;google_apis;x86_64" || { echo 'Platform tools/emulator installation failed'; exit 1; }
         shell: bash
 
       - name: Install AIDL compiler
