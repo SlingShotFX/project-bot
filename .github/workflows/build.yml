@@ -1,8 +1,8 @@
-name: CI
+name: Build Android App
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build:
@@ -60,11 +60,6 @@ jobs:
           $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "build-tools;30.0.3" "platforms;android-30" || { echo 'SDK package installation failed'; exit 1; }
           $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "extras;android;m2repository" "extras;google;m2repository" || { echo 'Extras installation failed'; exit 1; }
           $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platform-tools" "emulator" "system-images;android-30;google_apis;x86_64" || { echo 'Platform tools/emulator installation failed'; exit 1; }
-        shell: bash
-
-      - name: Verify AIDL Installation
-        run: |
-          aidl --version
         shell: bash
 
       - name: Get Date
