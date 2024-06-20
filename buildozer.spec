@@ -19,13 +19,10 @@ source.include_exts = py,png,jpg,kv,atlas
 version = 0.1
 
 # Application requirements
-requirements = kivy==2.0.0, kivymd==0.104.2, pillow, MetaTrader5
+requirements = kivy, kivymd==0.104.2, MetaTrader5
 
 # Supported orientations
 orientation = portrait
-
-# Specify AIDL files to include
-android.add_aidl = src/main/aidl/foo/bar/IFoo.aidl
 
 # Specify output directory for generated Java source files (if needed)
 # android.add_src = path/to/generated/java/source
