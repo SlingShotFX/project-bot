@@ -28,6 +28,8 @@ orientation = portrait
 # Sets custom source for any requirements with recipes
 # requirements.source.kivy = ../../kivy
 
+android.add_aidl = src/main/aidl/foo/bar/IFoo.aidl
+
 # (list) List of service to declare
 #services = NAME:ENTRYPOINT_TO_PY,NAME2:ENTRYPOINT2_TO_PY
 
@@ -40,7 +42,7 @@ orientation = portrait
 fullscreen = 0
 
 # (list) Permissions
-android.permissions = android.permission.INTERNET, (name=android.permission.WRITE_EXTERNAL_STORAGE;maxSdkVersion=18)
+android.permissions = INTERNET
 
 # (list) Android architecture to build for
 android.archs = arm64-v8a, armeabi-v7a
