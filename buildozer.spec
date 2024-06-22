@@ -27,6 +27,16 @@ orientation = portrait
 # Specify AIDL files to include
 android.add_aidl = src/main/aidl/foo/bar/IFoo.aidl
 
+# Specify output directory for generated Java source files (if needed)
+# android.add_src = path/to/generated/java/source
+
+# Specify header directory for C++ headers (if needed)
+# android.add_cpp = path/to/generated/cpp/headers
+
+# List of services to declare (if any)
+# services = NAME:ENTRYPOINT_TO_PY,NAME2:ENTRYPOINT2_TO_PY
+
+# Android specific settings
 # Indicate if the application should be fullscreen or not
 fullscreen = 0
 
@@ -39,6 +49,11 @@ android.archs = arm64-v8a, armeabi-v7a
 # Allow backup for Android
 android.allow_backup = True
 
+# iOS specific settings (commented out for Android-only configuration)
+# ios.kivy_ios_url = https://github.com/kivy/kivy-ios
+# ios.kivy_ios_branch = master
+
+
 [buildozer]
 
 # Log level (0 = error only, 1 = info, 2 = debug (with command output))
@@ -46,4 +61,3 @@ log_level = 2
 
 # Display warning if buildozer is run as root (0 = False, 1 = True)
 warn_on_root = 1
-
