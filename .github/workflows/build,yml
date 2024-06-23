@@ -3,6 +3,10 @@ name: CI
 on:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '0 0 1,15 * *'
 
 jobs:
   build:
@@ -23,12 +27,7 @@ jobs:
 
       - name: Get Date
         id: get-date
-        run: |
-            echo "::set-output name=date::$(/bin/date -u "+%Y%m%d")"
-            sudo apt-get update
-            sudo apt-get install build-essential
-            sudo apt-get install libstdc++6
-            sudo apt-get install aidl 
+        run: echo "date=$(date -u '+%Y%m%d')" >> $GITHUB_ENV
         shell: bash
 
       - name: Install dependencies
@@ -57,12 +56,6 @@ jobs:
           echo "Android SDK licenses accepted successfully."
         shell: bash
 
-      - name: Install AIDL compiler
-        run: |
-          sudo apt update
-          sudo apt install -y aidl
-        shell: bash
-
       - name: Update SDK and install packages
         run: |
           set -e
@@ -74,24 +67,24 @@ jobs:
 
       - name: Verify AIDL Installation
         run: |
-          aidl --help
+          $ANDROID_HOME/cmdline-tools/latest/bin/aidl --help || { echo 'AIDL verification failed'; exit 1; }
         shell: bash
-
-      - name: Get Date
-        id: get-date
-        run: echo "date=$(date -u '+%Y%m%d')" >> $GITHUB_ENV
 
       - name: Cache Buildozer global directory
         uses: actions/cache@v2
         with:
           path: .buildozer_global
           key: buildozer-global-${{ hashFiles('buildozer.spec') }}
+          restore-keys: |
+            buildozer-global-
 
       - name: Cache Buildozer directory
         uses: actions/cache@v2
         with:
           path: .buildozer
           key: ${{ runner.os }}-${{ env.date }}-${{ hashFiles('buildozer.spec') }}
+          restore-keys: |
+            ${{ runner.os }}-
 
       - name: Build with Buildozer
         run: |
@@ -113,6 +106,11 @@ jobs:
       - name: Install distutils
         run: sudo apt-get install python3-distutils
         shell: bash
+
+      - name: Install packaging
+        run: pip install packaging
+        shell: bash
+
 
       - name: Install packaging
         run: pip install packaging
