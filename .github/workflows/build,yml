@@ -68,7 +68,10 @@ jobs:
 
       - name: Verify AIDL Installation
         run: |
-          which aidl || { echo 'AIDL not found'; exit 1; }
+          if ! command -v aidl &> /dev/null; then
+            echo 'AIDL not found in PATH';
+            exit 1;
+          fi
           aidl --help || { echo 'AIDL verification failed'; exit 1; }
         shell: bash
 
