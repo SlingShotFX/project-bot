@@ -1,4 +1,5 @@
 name: CI
+
 on:
   push:
     branches: [ main ]
@@ -7,8 +8,64 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      ANDROID_HOME: ${{ github.workspace }}/android-sdk
+      JAVA_HOME: /usr/lib/jvm/java-8-openjdk-amd64
+
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          sudo apt update && sudo apt install -y \
+            build-essential ccache git libncurses5 libncurses5-dev libtiff5-dev libjpeg8-dev zlib1g-dev \
+            libfreetype6-dev liblcms2-dev libwebp-dev libffi-dev \
+            openjdk-8-jdk unzip zip wget
+          pip install --upgrade cython buildozer
+        shell: bash
+
+      - name: Install Android SDK tools
+        run: |
+          set -e
+          mkdir -p $ANDROID_HOME/cmdline-tools/latest
+          wget -q "https://dl.google.com/android/repository/commandlinetools-linux-7583922_latest.zip" -O android-sdk-tools.zip
+          unzip -qq android-sdk-tools.zip -d $ANDROID_HOME/cmdline-tools/latest
+          mv $ANDROID_HOME/cmdline-tools/latest/cmdline-tools/* $ANDROID_HOME/cmdline-tools/latest/
+          rmdir $ANDROID_HOME/cmdline-tools/latest/cmdline-tools
+        shell: bash
+
+      - name: Accept Android SDK licenses
+        run: |
+          mkdir -p $ANDROID_HOME/licenses || true
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses >/dev/null || true
+          echo "Android SDK licenses accepted successfully."
+        shell: bash
+
+      - name: Install AIDL compiler
+        run: |
+          sudo apt update
+          sudo apt install -y aidl
+        shell: bash
+
+      - name: Update SDK and install packages
+        run: |
+          set -e
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --update || { echo 'SDK update failed'; exit 1; }
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "build-tools;30.0.3" "platforms;android-30" || { echo 'SDK package installation failed'; exit 1; }
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "extras;android;m2repository" "extras;google;m2repository" || { echo 'Extras installation failed'; exit 1; }
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platform-tools" "emulator" "system-images;android-30;google_apis;x86_64" || { echo 'Platform tools/emulator installation failed'; exit 1; }
+        shell: bash
+
+      - name: Verify AIDL Installation
+        run: |
+          aidl --help
+        shell: bash
 
       - name: Get Date
         id: get-date
@@ -20,20 +77,33 @@ jobs:
           path: .buildozer_global
           key: buildozer-global-${{ hashFiles('buildozer.spec') }}
 
-      - uses: actions/cache@v2
+      - name: Cache Buildozer directory
+        uses: actions/cache@v2
         with:
           path: .buildozer
           key: ${{ runner.os }}-${{ env.date }}-${{ hashFiles('buildozer.spec') }}
 
       - name: Build with Buildozer
-        uses: ArtemSBulgakov/buildozer@v1
-        id: buildozer
-        with:
-          command: android debug
-          buildozer_version: master
+        run: |
+          set -e
+          buildozer android debug || { echo 'Buildozer build failed'; exit 1; }
+        shell: bash
+
+      - name: List APK files
+        run: |
+          ls -l .buildozer/android/platform/build/dists/*/bin/*.apk || { echo 'Listing APK files failed'; exit 1; }
+        shell: bash
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
           name: package
-          path: ${{ steps.buildozer.outputs.filename }}
+          path: .buildozer/android/platform/build/dists/*/bin/*.apk
+
+      - name: Install distutils
+        run: sudo apt-get install python3-distutils
+        shell: bash
+
+      - name: Install packaging
+        run: pip install packaging
+        shell: bash
