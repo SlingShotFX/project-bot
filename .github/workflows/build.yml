@@ -64,7 +64,7 @@ jobs:
 
       - name: Verify AIDL Installation
         run: |
-          aidl --version
+          aidl --help
         shell: bash
 
       - name: Get Date
