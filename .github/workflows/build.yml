@@ -99,3 +99,13 @@ jobs:
         with:
           name: package
           path: .buildozer/android/platform/build/dists/*/bin/*.apk
+
+      - name: Install distutils
+        run: sudo apt-get install python3-distutils
+        shell: bash
+
+      - name: Install packaging
+        run: pip install packaging
+        shell: bash
+
+
