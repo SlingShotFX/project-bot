@@ -19,7 +19,7 @@ source.include_exts = py,png,jpg,kv,atlas
 version = 0.1
 
 # Application requirements
-requirements = kivy==2.0.0, kivymd==0.104.2, pillow, MetaTrader5
+requirements = python3==3.7.6, hostpython3==3.7.6, kivy==2.0.0, kivymd==0.104.2, pillow, MetaTrader5
 
 # Supported orientations
 orientation = portrait
@@ -48,6 +48,10 @@ android.archs = arm64-v8a, armeabi-v7a
 
 # Allow backup for Android
 android.allow_backup = True
+
+oxy.python_version = 3.7.6
+
+oxy.kivy_version = 1.9.1
 
 # iOS specific settings (commented out for Android-only configuration)
 # ios.kivy_ios_url = https://github.com/kivy/kivy-ios
