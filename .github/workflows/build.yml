@@ -15,6 +15,7 @@ jobs:
     env:
       ANDROID_HOME: ${{ github.workspace }}/android-sdk
       JAVA_HOME: /usr/lib/jvm/java-8-openjdk-amd64
+      PATH: ${{ github.workspace }}/android-sdk/cmdline-tools/latest/bin:${{ github.workspace }}/android-sdk/platform-tools:${{ github.workspace }}/android-sdk/build-tools/30.0.3:${{ env.PATH }}
 
     steps:
       - name: Checkout Repository
@@ -62,12 +63,16 @@ jobs:
           $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --update || { echo 'SDK update failed'; exit 1; }
           $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "build-tools;30.0.3" "platforms;android-30" || { echo 'SDK package installation failed'; exit 1; }
           $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "extras;android;m2repository" "extras;google;m2repository" || { echo 'Extras installation failed'; exit 1; }
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platform-tools" "emulator" "system-images;android-30;google_apis;x86_64" || { echo 'Platform tools/emulator installation failed'; exit 1; }
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platform-tools" || { echo 'Platform tools installation failed'; exit 1; }
         shell: bash
 
       - name: Verify AIDL Installation
         run: |
-          $ANDROID_HOME/cmdline-tools/latest/bin/aidl --help || { echo 'AIDL verification failed'; exit 1; }
+          if ! command -v aidl &> /dev/null; then
+            echo 'AIDL not found in PATH';
+            exit 1;
+          fi
+          aidl --help || { echo 'AIDL verification failed'; exit 1; }
         shell: bash
 
       - name: Cache Buildozer global directory
