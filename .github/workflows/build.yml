@@ -67,7 +67,7 @@ jobs:
 
       - name: Verify AIDL Installation
         run: |
-          aidl --help
+          $ANDROID_HOME/cmdline-tools/latest/bin/aidl --help || { echo 'AIDL verification failed'; exit 1; }
         shell: bash
 
       - name: Cache Buildozer global directory
