@@ -10,6 +10,15 @@ from kivymd.uix.textfield import MDTextField
 from kivymd.icon_definitions import md_icons
 from kivy.clock import Clock
 from kivy.core.window import Window
+from packaging.version import Version, InvalidVersion
+
+try:
+    version = Version('1.0.0')
+    if version > Version('0.9.0'):
+        print("Version is greater than 0.9.0")
+except InvalidVersion as e:
+    print(f"Invalid version: {e}")
+
 
 # Add the path to your resources
 from kivy.resources import resource_add_path
