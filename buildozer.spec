@@ -19,7 +19,7 @@ source.include_exts = py,png,jpg,kv,atlas
 version = 0.1
 
 # Application requirements
-requirements = python3==3.7.6, hostpython3==3.7.6, kivy==2.0.0, kivymd==0.104.2, pillow, MetaTrader5
+requirements = python3, kivy, kivymd==0.104.2, pillow, MetaTrader5
 
 # Supported orientations
 orientation = portrait
